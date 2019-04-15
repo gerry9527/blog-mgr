@@ -2,8 +2,9 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import Elemnet from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css'
-import './icons' // icon
+import 'element-ui/lib/theme-chalk/index.css';
+import './styles/index.scss';
+import './icons'; // icon
 Vue.config.productionTip = false;
 Vue.use(Elemnet);
 
