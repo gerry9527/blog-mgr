@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <el-form ref="loginForm" :model="loginForm" class="login-Form" autocomplete="on" :rules="rules">
-            <h3 class="title">登&nbsp;录</h3>
+            <h3 class="title">注&nbsp;册</h3>
             <el-form-item prop="username">
                 <span class="svg-container">
                     <svg-icon icon-class="user" />
@@ -17,8 +17,22 @@
                   <svg-icon :icon-class="pwdType == 'password'?'eye':'eye-open'"/>
                 </span>
             </el-form-item>
-            <el-button class="loginButton" type="primary" @click="onSubmit">登录</el-button>
-            <span class="registerButton"  @click="linkRegister">注册</span>
+            <el-form-item prop="checkPassword">
+                <span class="svg-container">
+                    <svg-icon icon-class="lock-check" />
+                </span>
+                <el-input class="checkPassword input" v-model="loginForm.checkPassword" placeholder="确认密码" :type="pwdType"></el-input>
+                <span class="show-checkPwd" @click="showCheckPwd">
+                  <svg-icon :icon-class="pwdType == 'password'?'eye':'eye-open'"/>
+                </span>
+            </el-form-item>
+             <el-form-item prop="email">
+                <span class="svg-container">
+                    <svg-icon icon-class="email" />
+                </span>
+                <el-input class="email input" v-model="loginForm.email" placeholder="邮箱" type="email"></el-input>
+            </el-form-item>
+            <el-button class="registerButton"  @click="onRegister">注册</el-button>
         </el-form>       
     </div>
 </template>
@@ -45,7 +59,9 @@
       return{
         loginForm: {
           username:'',
-          password:''
+          password:'',
+          checkPassword:'',
+          email:''
         },
         rules: {
           username: [{ required: true,trigger: 'blur',validator: validateUsername }],
@@ -64,23 +80,15 @@
           this.pwdType = "password";
         }
       },
+      showCheckPwd(){
+        if(this.pwdType == "password"){
+          this.pwdType = "";
+        }else{
+          this.pwdType = "password";
+        }
+      },
       onSubmit() {
-        debugger
-        this.$refs.loginForm.validate((valid) => {
-          if (valid) {
-            this.$store
-            .dispatch("Login",this.loginForm)
-            .then(()=>{
-                this.$router.push({path:'/'});
-            })
-            .catch(()=>{
-                console.log("error");
-            })
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+        console.log('submit!');
       },
       linkRegister(){
          debugger
@@ -98,7 +106,7 @@
       align-items: center;
       width: 100%;
       min-height: 100%;
-      background: url(../../assets/loginBk.jpg) no-repeat;
+      background: url(../../assets/registerBk.jpg) no-repeat;
       background-size: cover;
       .login-Form {
           display: -webkit-flex;
@@ -134,31 +142,44 @@
               display: inline-block;
               width: 7%;
             }
-            .username{
+            .username,.email{
               width: 90%;
               input.el-input__inner{
                 border: none !important;
               }
             }
-            .password{
+            .password,.checkPassword{
               width: 86%;
               input.el-input__inner{
                 border: none !important;
               }
             }
           }
-          .loginButton {
+          .registerButton {
             width: 100%;
-            margin-bottom: 20px;
-          }
-          .registerButton{
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            &:hover,&:active{
-              color: #409EFF;
-              text-decoration: underline;
+            color: #fef4e9;
+            border: solid 1px #da7c0c;
+            background: #f78d1d;
+            /*! autoprefixer: off */
+            background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+            /* autoprefixer: on */
+            background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+            filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+            &:hover{
+               background: #f47c20;
+               /*! autoprefixer: off */
+               background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+              /* autoprefixer: on */
+               background: -moz-linear-gradient(top,  #f88e11,  #f06015);
+               filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');
+            }
+            &:active{
+              color: #fcd3a5;
+              /*! autoprefixer: off */
+              background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a));
+              /* autoprefixer: on */
+              background: -moz-linear-gradient(top,  #f47a20,  #faa51a);
+              filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a');
             }
           }
       }
