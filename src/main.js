@@ -6,9 +6,11 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './styles/index.scss';
 import './icons'; // icon
 import store from './store';
+import axios from 'axios';
 
 Vue.config.productionTip = false;
 Vue.use(Elemnet);
+Vue.prototype.$axios = axios;
 
 new Vue({
   el:'#app',

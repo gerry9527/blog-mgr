@@ -44,8 +44,8 @@
         }
       return{
         loginForm: {
-          username:'',
-          password:''
+          username:'admin',
+          password:'123456'
         },
         rules: {
           username: [{ required: true,trigger: 'blur',validator: validateUsername }],
@@ -68,14 +68,17 @@
         debugger
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
-            this.$store
-            .dispatch("Login",this.loginForm)
-            .then(()=>{
+            // this.$axios.defaults.baseURL = 'http://192.168.3.3:3000';
+            // this.$axios.post('/users/login',{username:111,password: 222})
+            // .then(function (params) {
+            //   debugger;
+            // })
+             this.$store.dispatch("Login",this.loginForm).then(()=>{
                 this.$router.push({path:'/'});
-            })
-            .catch(()=>{
+            }).catch(()=>{
+                debugger
                 console.log("error");
-            })
+            }) 
           } else {
             console.log('error submit!!');
             return false;

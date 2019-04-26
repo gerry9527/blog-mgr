@@ -6,12 +6,13 @@ import { getToken } from '@/utils/auth'
 // 创建axios实例
 
 const service = axios.create({
-    baseURL: "http://127.0.0.1:43718", // api的base_url
-    timeout: 5000 // 请求超时时间
+    baseURL: "http://192.168.3.3:3000", // api的base_url
+    // timeout: 5000 // 请求超时时间
 })
 
 // request拦截器
 service.interceptors.request.use(config => {
+    debugger
     if (store.getters.token) {
         config.headers.Authorization = `Bearer ${getToken()}`;
     }
@@ -25,6 +26,7 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
     response => {
+        debugger
         /**
         * code为非20000是抛错 可结合自己业务进行修改
         */

@@ -1,147 +1,120 @@
-'use strict'
-const path = require('path')
-const pkg = require('./package.json')
+
+const path = require('path');
 
 function resolve(dir) {
-  return path.join(__dirname, dir)
+    return path.join(__dirname, dir)
 }
-
-const name = pkg.name || 'blog-mrg' // page title
-const port = 8080 // dev port
-
-// All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
-  /**
-   * You will need to set publicPath if you plan to deploy your site under a sub path,
-   * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
-   * In most cases please use '/' !!!
-   * Detail: https://cli.vuejs.org/config/#publicpath
-   */
-  publicPath: '/',
-  outputDir: 'dist',
-  assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development' ? 'error' : false,
-  productionSourceMap: false,
-  devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
+    // 项目部署的基础路径
+    // 我们默认假设你的应用将会部署在域名的根部，
+    // 比如 https://www.my-app.com/
+    // 如果你的应用时部署在一个子路径下，那么你需要在这里
+    // 指定子路径。比如，如果你的应用部署在
+    // https://www.foobar.com/my-app/
+    // 那么将这个值改为 `/my-app/`
+    baseUrl: '/',
+
+    // 将构建好的文件输出到哪里
+    outputDir: 'dist',
+
+    // 放置静态资源的地方 (js/css/img/font/...)
+    // assetsDir: '',
+
+    // 是否在保存的时候使用 `eslint-loader` 进行检查。
+    // 有效的值：`ture` | `false` | `"error"`
+    // 当设置为 `"error"` 时，检查出的错误会触发编译失败。
+    lintOnSave: true,
+
+    // 使用带有浏览器内编译器的完整构建版本
+    // 查阅 https://cn.vuejs.org/v2/guide/installation.html#运行时-编译器-vs-只包含运行时
+    // compiler: false,
+
+    // babel-loader 默认会跳过 node_modules 依赖。
+    // 通过这个选项可以显式转译一个依赖。
+    transpileDependencies: [/* string or regex */],
+
+    // 是否为生产环境构建生成 source map？
+    productionSourceMap: false,
+
+    // 调整内部的 webpack 配置。
+    // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/webpack.md
+    configureWebpack: {
     },
-    proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://localhost:${port}/mock`,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
+    chainWebpack(config) {
+        // set svg-sprite-loader
+        config.module
+          .rule('svg')
+          .exclude.add(resolve('src/icons'))
+          .end()
+        config.module
+          .rule('icons')
+          .test(/\.svg$/)
+          .include.add(resolve('src/icons'))
+          .end()
+          .use('svg-sprite-loader')
+          .loader('svg-sprite-loader')
+          .options({
+            symbolId: 'icon-[name]'
+          })
+          .end()
+      },
+
+    // CSS 相关选项
+    css: {
+        // 将组件内的 CSS 提取到一个单独的 CSS 文件 (只用在生产环境中)
+        // 也可以是一个传递给 `extract-text-webpack-plugin` 的选项对象
+        extract: true,
+
+        // 是否开启 CSS source map？
+        sourceMap: false,
+
+        // 为预处理器的 loader 传递自定义选项。比如传递给
+        // sass-loader 时，使用 `{ sass: { ... } }`。
+        loaderOptions: {},
+
+        // 为所有的 CSS 及其预处理文件开启 CSS Modules。
+        // 这个选项不会影响 `*.vue` 文件。
+        modules: false
     },
-    after(app) {
-      require('@babel/register')
-      const bodyParser = require('body-parser')
 
-      // parse app.body
-      // http://expressjs.com/en/4x/api.html#req.body
-      app.use(bodyParser.json())
-      app.use(bodyParser.urlencoded({
-        extended: true
-      }))
+    // 在生产环境下为 Babel 和 TypeScript 使用 `thread-loader`
+    // 在多核机器下会默认开启。
+    parallel: require('os').cpus().length > 1,
 
-      /* const { default: mocks } = require('./mock')
-      for (const mock of mocks) {
-        app[mock.type](mock.url, mock.response)
-      } */
-    }
-  },
-  configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
-    name: name,
-    resolve: {
-      alias: {
-        '@': resolve('src')
-      }
-    }
-  },
-  chainWebpack(config) {
-    config.plugins.delete('preload') // TODO: need test
-    config.plugins.delete('prefetch') // TODO: need test
+    // PWA 插件的选项。
+    // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli-plugin-pwa/README.md
+    pwa: {},
 
-    // set svg-sprite-loader
-    config.module
-      .rule('svg')
-      .exclude.add(resolve('src/icons'))
-      .end()
-    config.module
-      .rule('icons')
-      .test(/\.svg$/)
-      .include.add(resolve('src/icons'))
-      .end()
-      .use('svg-sprite-loader')
-      .loader('svg-sprite-loader')
-      .options({
-        symbolId: 'icon-[name]'
-      })
-      .end()
+    // 配置 webpack-dev-server 行为。
+    devServer: {
+        open: process.platform === 'darwin',
+        host: 'localhost',
+        port: 8888,
+        https: false,
+        hotOnly: false,
+        open:true,
+        // 查阅 https://github.com/vuejs/vue-docs-zh-cn/blob/master/vue-cli/cli-service.md#配置代理
+        proxy: 'http://localhost:3000', // string | Object
+        before: app => { }
+    },
 
-    // set preserveWhitespace
-    config.module
-      .rule('vue')
-      .use('vue-loader')
-      .loader('vue-loader')
-      .tap(options => {
-        options.compilerOptions.preserveWhitespace = true
-        return options
-      })
-      .end()
-
-    config
-      .when(process.env.NODE_ENV === 'development',
-        config => config.devtool('cheap-source-map')
-      )
-
-    config
-      .when(process.env.NODE_ENV !== 'development',
-        config => {
-          config
-            .plugin('ScriptExtHtmlWebpackPlugin')
-            .after('html')
-            .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
-              inline: /runtime\..*\.js$/
-            }])
-            .end()
-          config
-            .optimization.splitChunks({
-              chunks: 'all',
-              cacheGroups: {
-                libs: {
-                  name: 'chunk-libs',
-                  test: /[\\/]node_modules[\\/]/,
-                  priority: 10,
-                  chunks: 'initial' // only package third parties that are initially dependent
-                },
-                elementUI: {
-                  name: 'chunk-elementUI', // split elementUI into a single package
-                  priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
-                  test: /[\\/]node_modules[\\/]element-ui[\\/]/
-                },
-                commons: {
-                  name: 'chunk-commons',
-                  test: resolve('src/components'), // can customize your rules
-                  minChunks: 3, //  minimum common number
-                  priority: 5,
-                  reuseExistingChunk: true
-                }
-              }
-            })
-          config.optimization.runtimeChunk('single')
+    configureWebpack: config => {
+        if (process.env.NODE_ENV === 'production') {
+            // 为生产环境修改配置...
+            if(process.env.npm_lifecycle_event === 'analyze'){
+                config.plugins.push(
+                    new BundleAnalyzerPlugin()
+                );
+            }
+            
+        } else {
+            // 为开发环境修改配置...
         }
-      )
-  }
+        
+    },
+
+    // 第三方插件的选项
+    pluginOptions: {
+       
+    }
 }
