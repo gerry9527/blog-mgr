@@ -1,36 +1,36 @@
 <template>
-    <div class="login-container">
-        <el-form ref="loginForm" :model="loginForm" class="login-Form" autocomplete="on" :rules="rules">
+    <div class="register-container">
+        <el-form ref="registerForm" :model="registerForm" class="register-Form" autocomplete="on" :rules="rules">
             <h3 class="title">注&nbsp;册</h3>
             <el-form-item prop="username">
                 <span class="svg-container">
                     <svg-icon icon-class="user" />
                 </span>
-                <el-input class="username input" v-model="loginForm.username" placeholder="用户名" type="text"></el-input>
+                <el-input class="username input" v-model="registerForm.username" placeholder="用户名" type="text"></el-input>
             </el-form-item>
             <el-form-item prop="password">
                 <span class="svg-container">
                     <svg-icon icon-class="lock" />
                 </span>
-                <el-input class="password input" v-model="loginForm.password" placeholder="密码" :type="pwdType"></el-input>
+                <el-input class="password input" v-model="registerForm.password" placeholder="密码" :type="pwdType"></el-input>
                 <span class="show-pwd" @click="showPwd">
                   <svg-icon :icon-class="pwdType == 'password'?'eye':'eye-open'"/>
                 </span>
             </el-form-item>
-            <el-form-item prop="checkPassword">
+            <el-form-item prop="confirmPassword">
                 <span class="svg-container">
                     <svg-icon icon-class="lock-check" />
                 </span>
-                <el-input class="checkPassword input" v-model="loginForm.checkPassword" placeholder="确认密码" :type="pwdType"></el-input>
-                <span class="show-checkPwd" @click="showCheckPwd">
-                  <svg-icon :icon-class="pwdType == 'password'?'eye':'eye-open'"/>
+                <el-input class="confirmPassword input" v-model="registerForm.confirmPassword" placeholder="确认密码" :type="confirmPwdType"></el-input>
+                <span class="show-confirmPwd" @click="showConfirmPwd">
+                  <svg-icon :icon-class="confirmPwdType == 'password'?'eye':'eye-open'"/>
                 </span>
             </el-form-item>
              <el-form-item prop="email">
                 <span class="svg-container">
                     <svg-icon icon-class="email" />
                 </span>
-                <el-input class="email input" v-model="loginForm.email" placeholder="邮箱" type="email"></el-input>
+                <el-input class="email input" v-model="registerForm.email" placeholder="邮箱" type="email"></el-input>
             </el-form-item>
             <el-button class="registerButton"  @click="onRegister">注册</el-button>
         </el-form>       
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+  /* import { Message, MessageBox } from 'element-ui' */
   export default {
     data() {
        const validateUsername = (rule, value, callback) => {
@@ -56,18 +57,43 @@
             callback()
           }
         }
+        const validateConfirmPassword = (rule, value, callback) => {
+          if (value == ""){
+            callback(new Error('密码不能为空！'))
+          }else if(value && value.length < 6){
+            callback(new Error('密码不能小于6位字符！'))
+          } else if (value !== this.registerForm.password) {
+            callback(new Error('两次输入密码不一致!'));
+          } else {
+            callback()
+          }
+        }
+        const validateEmail = (rule, value, callback) => {
+          const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/
+          if (value == ""){
+            callback(new Error('邮箱不能为空！'))
+          } else if(!mailReg.test(value)){
+            callback(new Error('邮箱格式不正确！'))
+          } else {
+            callback()
+          }
+        }
+        
       return{
-        loginForm: {
-          username:'',
-          password:'',
-          checkPassword:'',
-          email:''
+        registerForm: {
+          username:'abcde',
+          password:'123456',
+          confirmPassword:'123456',
+          email:'aa@qq.com'
         },
         rules: {
-          username: [{ required: true,trigger: 'blur',validator: validateUsername }],
-          password: [{ required: true,trigger: 'blur',validator: validatePassword }]
+          username: [{ required: true,trigger:'blur',validator: validateUsername }],
+          password: [{ required: true,trigger:'blur',validator: validatePassword }],
+          confirmPassword: [{ required: true,trigger:'blur',validator: validateConfirmPassword }],
+          email: [{ required: true,trigger:['blur', 'change'],type:'email',validator: validateEmail }]
         },
-        pwdType:'password'
+        pwdType:'password',
+        confirmPwdType:'password'
       }
       
     },
@@ -80,25 +106,34 @@
           this.pwdType = "password";
         }
       },
-      showCheckPwd(){
-        if(this.pwdType == "password"){
-          this.pwdType = "";
+      showConfirmPwd(){
+        if(this.confirmPwdType == "password"){
+          this.confirmPwdType = "";
         }else{
-          this.pwdType = "password";
+          this.confirmPwdType = "password";
         }
       },
-      onSubmit() {
-        console.log('submit!');
-      },
-      linkRegister(){
-         debugger
-         this.$router.push({ path: 'register'});
+      onRegister() {
+        this.$refs.registerForm.validate((valid) => {
+          if (valid) {
+             this.$store.dispatch("Register",this.registerForm).then(()=>{
+               debugger
+               this.$router.push({path:'/login'});
+            }).catch(()=>{
+                debugger
+                console.log("error");
+            }) 
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       }
     }
   }
 </script>
 <style lang="scss" scope>
-    .login-container{
+    .register-container{
       display: -webkit-flex;
       display: flex;
       flex-direction: row;
@@ -108,7 +143,7 @@
       min-height: 100%;
       background: url(../../assets/registerBk.jpg) no-repeat;
       background-size: cover;
-      .login-Form {
+      .register-Form {
           display: -webkit-flex;
           display: flex;
           flex-direction: column;
@@ -148,7 +183,7 @@
                 border: none !important;
               }
             }
-            .password,.checkPassword{
+            .password,.confirmPassword{
               width: 86%;
               input.el-input__inner{
                 border: none !important;

@@ -24,6 +24,7 @@
 </template>
 
 <script>
+  import { Message, MessageBox } from 'element-ui'
   export default {
     data() {
        const validateUsername = (rule, value, callback) => {
@@ -44,8 +45,8 @@
         }
       return{
         loginForm: {
-          username:'admin',
-          password:'123456'
+          username:'',
+          password:''
         },
         rules: {
           username: [{ required: true,trigger: 'blur',validator: validateUsername }],
@@ -73,8 +74,9 @@
             // .then(function (params) {
             //   debugger;
             // })
-             this.$store.dispatch("Login",this.loginForm).then(()=>{
-                this.$router.push({path:'/'});
+            this.$store.dispatch("Login",this.loginForm).then(()=>{
+                debugger
+                this.$router.push({ path: "/" });
             }).catch(()=>{
                 debugger
                 console.log("error");
@@ -133,6 +135,9 @@
             line-height: 40px;
             outline: 0;
             padding: 0 15px;
+            .el-input::-webkit-scrollbar-thumb{
+              background: #fff;
+            }
             .svg-container{
               display: inline-block;
               width: 7%;

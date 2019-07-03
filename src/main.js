@@ -7,6 +7,7 @@ import './styles/index.scss';
 import './icons'; // icon
 import store from './store';
 import axios from 'axios';
+import '@/permission' // permission control
 
 Vue.config.productionTip = false;
 Vue.use(Elemnet);
