@@ -61,7 +61,7 @@
       showPwd(){
         if(this.pwdType == "password"){
           this.pwdType = "";
-        }else{
+        } else {
           this.pwdType = "password";
         }
       },
@@ -71,7 +71,7 @@
             login(this.loginForm).then(res => {
               if (res.code === 0){
                 this.$store.commit('SET_TOKEN', res.content.token);
-                this.$router.push({ path: "/home/projectsManage" });
+                this.$router.push({ path: "/home" });
               } else {
                 this.$message.warning(res.msg)
               }

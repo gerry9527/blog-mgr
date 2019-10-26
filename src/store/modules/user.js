@@ -6,7 +6,8 @@ const user = {
         token: '',
         name:'',
         avatar:'',
-        roles:[]
+        roles:[],
+        title: ''
     },
 
 
@@ -22,6 +23,9 @@ const user = {
         },
         SET_ROLES: (state, roles) => {
             state.roles = roles
+        },
+        SET_TITLE (state, title) {
+            state.title = title
         }
     },
 
@@ -61,9 +65,9 @@ const user = {
         // 前端 登出
         FedLogOut({ commit }) {
             return new Promise(resolve => {
-            commit('SET_TOKEN', '')
-            removeToken()
-            resolve()
+                commit('SET_TOKEN', '')
+                removeToken()
+                resolve()
             })
         }
     }

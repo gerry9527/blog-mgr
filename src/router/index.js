@@ -5,33 +5,48 @@ import Layout from '../views/Layout.vue';
 Vue.use(Router)
 export const constantRoutes = [
     {
+        path: '/',
+        redirect: '/home'
+    },
+    {
         path:'/login',
-        component:() => import('@/views/login/index')
+        component:() => import('../views/login/index')
     },
     {
         path:'/register',
-        component:() => import('@/views/register/index')
+        component:() => import('../views/register/index')
     },
     {
-        path: '/',
+        path: '/home',
         component: Layout,
         redirect: '/home',
         name: 'home',
-        hidden: true,
-        children: [{
-            path: '/projectsManage',
-            name:'projectsManage',
-            component: () => import('@/views/projectsManage/index')
-        },{
-            path: '/APIManage',
-            name:'APIManage',
-            component: () => import('@/views/APIManage/index')
-        }]
+        children: [
+            {
+                path: '/',
+                redirect: 'categoryManage'
+            },
+            {
+                path: 'categoryManage',
+                name: 'categoryManage',
+                component: () => import('../views/system-manage/category/CategoryManage'),
+                meta: {
+                    title: '类别管理'
+                }
+            },{
+                path: 'addArticle',
+                name:'addArticle',
+                component: () => import('../views/system-manage/article/AddArticle'),
+                meta: {
+                    title: '新增文章'
+                }
+            }
+        ]
     }
 ]
 
 const createRouter = () => new Router({
-    routes:constantRoutes
+    routes: constantRoutes
 })
 
 const router = createRouter()
