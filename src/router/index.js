@@ -46,6 +46,7 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
+    mode: 'history',
     routes: constantRoutes
 })
 
