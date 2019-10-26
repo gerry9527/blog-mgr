@@ -38,7 +38,7 @@
 </template>
 
 <script>
-  /* import { Message, MessageBox } from 'element-ui' */
+  import { register } from '../../api/login'
   export default {
     data() {
        const validateUsername = (rule, value, callback) => {
@@ -116,7 +116,7 @@
       onRegister() {
         this.$refs.registerForm.validate((valid) => {
           if (valid) {
-             this.$store.dispatch("Register",this.registerForm).then(()=>{
+            register(this.registerForm).then(res => {
                this.$router.push({path:'/login'});
             }).catch(()=>{
                 console.log("error");

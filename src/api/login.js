@@ -1,26 +1,18 @@
-import request from '@/utils/request'
+import request from '../utils/request'
 
-export function login(username, password) {
+export function login(params) {
     return request({
         url: '/users/login',
         method: 'post',
-        data: {
-            username,
-            password
-        }
+        data: params
     })
 }
 
-export function register(username, password,confirmPassword,email) {
+export function register(params) {
     return request({
         url: '/users/register',
         method: 'post',
-        data: {
-            username,
-            password,
-            confirmPassword,
-            email
-        }
+        data: params
     })
 }
 

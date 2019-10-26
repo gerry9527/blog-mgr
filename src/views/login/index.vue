@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import { Message, MessageBox } from 'element-ui'
+  import { login } from '../../api/login'
   export default {
     data() {
        const validateUsername = (rule, value, callback) => {
@@ -68,15 +68,15 @@
       onSubmit() {
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
-            // this.$axios.defaults.baseURL = 'http://192.168.3.3:3000';
-            // this.$axios.post('/users/login',{username:111,password: 222})
-            // .then(function (params) {
-            //   debugger;
-            // })
-            this.$store.dispatch("Login",this.loginForm).then(()=>{
-                this.$router.push({ path: "/" });
+            login(this.loginForm).then(res => {
+              if (res.code === 0){
+                this.$store.commit('SET_TOKEN', res.content.token);
+                this.$router.push({ path: "/home/projectsManage" });
+              } else {
+                this.$message.warning(res.msg)
+              }
             }).catch(()=>{
-                console.log("error");
+              console.log("error");
             })
           } else {
             console.log('error submit!!');
@@ -116,12 +116,10 @@
           }
           .el-form-item{
             width: 100%;
-            -webkit-appearance: none;
             background-color: #FFF;
             background-image: none;
             border-radius: 4px;
             border: 1px solid #DCDFE6;
-            -webkit-box-sizing: border-box;
             box-sizing: border-box;
             color: #606266;
             display: inline-block;

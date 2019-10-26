@@ -1,10 +1,9 @@
-import { login,register,getInfo} from '@/api/login';
-import { getToken, setToken, removeToken} from '@/utils/auth';
-import { MessageBox } from 'element-ui'
+import { getInfo} from '@/api/login';
+import { removeToken} from '@/utils/auth';
 
 const user = {
     state:{
-        token:getToken(),
+        token: '',
         name:'',
         avatar:'',
         roles:[]
@@ -27,38 +26,6 @@ const user = {
     },
 
     actions:{
-        //登录
-        Login({ commit }, userInfo) {
-            const username = userInfo.username.trim()
-            return new Promise((resolve, reject) => {
-              login(username, userInfo.password).then(response => {
-                const data = response.content;
-                setToken(data.token)
-                commit('SET_TOKEN', data.token);
-                resolve()
-              }).catch(error => {
-                 reject(error)
-              })
-            })
-        },
-
-        //注册
-        Register({ commit },userInfo) {
-            const username = userInfo.username.trim()
-            return new Promise((resolve, reject) => {
-              register(username, userInfo.password,userInfo.confirmPassword,userInfo.email).then(response => {
-                MessageBox.alert(response.content, '确定', {
-                    type: 'warning'
-                }).then(() => {
-
-                })
-                resolve()
-              }).catch(error => {
-                 reject(error)
-              })
-            })
-        },
-
          // 获取用户信息
         GetInfo({ commit, state }) {
             return new Promise((resolve, reject) => {

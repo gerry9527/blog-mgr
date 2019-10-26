@@ -10,7 +10,6 @@ module.exports = {
     // 如果你的应用时部署在一个子路径下，那么你需要在这里
     // 指定子路径。比如，如果你的应用部署在
     // https://www.foobar.com/my-app/
-    // 那么将这个值改为 `/my-app/`
     publicPath: '/',
     // 将构建好的文件输出到哪里
     outputDir: 'dist',
@@ -71,10 +70,10 @@ module.exports = {
         port: 8000,
         https: false,
         hotOnly: false,
-        proxy: {
-            '/': {
-                target: '192.168.159.1:3000'
-            }
-        }
+        // proxy: {
+        //     '/': {
+        //         target: '192.168.159.1:3000'
+        //     }
+        // }
     }
 }
