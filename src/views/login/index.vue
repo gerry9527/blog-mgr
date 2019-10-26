@@ -19,7 +19,7 @@
             </el-form-item>
             <el-button class="loginButton" type="primary" @click="onSubmit">登录</el-button>
             <span class="registerButton"  @click="linkRegister">注册</span>
-        </el-form>       
+        </el-form>
     </div>
 </template>
 
@@ -54,7 +54,7 @@
         },
         pwdType:'password'
       }
-      
+
     },
     methods: {
       //切换密码显示的图标
@@ -66,7 +66,6 @@
         }
       },
       onSubmit() {
-        debugger
         this.$refs.loginForm.validate((valid) => {
           if (valid) {
             // this.$axios.defaults.baseURL = 'http://192.168.3.3:3000';
@@ -75,12 +74,10 @@
             //   debugger;
             // })
             this.$store.dispatch("Login",this.loginForm).then(()=>{
-                debugger
                 this.$router.push({ path: "/" });
             }).catch(()=>{
-                debugger
                 console.log("error");
-            }) 
+            })
           } else {
             console.log('error submit!!');
             return false;
@@ -88,7 +85,6 @@
         });
       },
       linkRegister(){
-         debugger
          this.$router.push({ path: 'register'});
       }
     }
@@ -96,7 +92,6 @@
 </script>
 <style lang="scss" scope>
     .login-container{
-      display: -webkit-flex;
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -171,6 +166,6 @@
           }
       }
     }
-    
-    
+
+
 </style>

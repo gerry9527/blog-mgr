@@ -4,6 +4,7 @@ import router from './router';
 import Elemnet from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import './styles/index.scss';
+import './styles/normalize.css'
 import './icons'; // icon
 import store from './store';
 import axios from 'axios';

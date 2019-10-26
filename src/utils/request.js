@@ -12,7 +12,6 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    debugger
     if (store.getters.token) {
         config.headers.Authorization = `${getToken()}`;
     }
@@ -26,7 +25,6 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
     response => {
-        debugger
         /**
         * code为非0是抛错
         */

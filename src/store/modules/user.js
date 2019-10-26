@@ -31,9 +31,7 @@ const user = {
         Login({ commit }, userInfo) {
             const username = userInfo.username.trim()
             return new Promise((resolve, reject) => {
-                debugger
               login(username, userInfo.password).then(response => {
-                  debugger
                 const data = response.content;
                 setToken(data.token)
                 commit('SET_TOKEN', data.token);
@@ -46,16 +44,14 @@ const user = {
 
         //注册
         Register({ commit },userInfo) {
-            debugger
             const username = userInfo.username.trim()
             return new Promise((resolve, reject) => {
               register(username, userInfo.password,userInfo.confirmPassword,userInfo.email).then(response => {
-                  debugger
                 MessageBox.alert(response.content, '确定', {
                     type: 'warning'
                 }).then(() => {
-                    
-                }) 
+
+                })
                 resolve()
               }).catch(error => {
                  reject(error)
@@ -65,11 +61,8 @@ const user = {
 
          // 获取用户信息
         GetInfo({ commit, state }) {
-            debugger
             return new Promise((resolve, reject) => {
-                debugger
                 getInfo(state.token).then(response => {
-                    debugger
                     const data = response.content
                     if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
                         commit('SET_ROLES', data.roles)
@@ -83,7 +76,7 @@ const user = {
                 })
             })
         },
-  
+
         // 登出
         LogOut({ commit, state }) {
             return new Promise((resolve, reject) => {
@@ -97,7 +90,7 @@ const user = {
                 })
             })
         },
-    
+
         // 前端 登出
         FedLogOut({ commit }) {
             return new Promise(resolve => {

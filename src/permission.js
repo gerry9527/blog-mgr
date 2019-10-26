@@ -7,7 +7,6 @@ import { getToken } from '@/utils/auth' // 验权
 
 const whiteList = ['/login','/register'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
-    debugger
     NProgress.start()
     if (getToken()) {
         if (to.path === '/login') {
@@ -16,10 +15,8 @@ router.beforeEach((to, from, next) => {
         } else {
             if (store.getters.roles.length === 0) {
                 store.dispatch('GetInfo').then(res => { // 拉取用户信息
-                    debugger
                     next()
                 }).catch((err) => {
-                    debugger
                     store.dispatch('FedLogOut').then(() => {
                         Message.error(err || 'Verification failed, please login again')
                         next({ path: '/' })

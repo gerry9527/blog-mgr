@@ -33,7 +33,7 @@
                 <el-input class="email input" v-model="registerForm.email" placeholder="邮箱" type="email"></el-input>
             </el-form-item>
             <el-button class="registerButton"  @click="onRegister">注册</el-button>
-        </el-form>       
+        </el-form>
     </div>
 </template>
 
@@ -78,13 +78,13 @@
             callback()
           }
         }
-        
+
       return{
         registerForm: {
-          username:'abcde',
-          password:'123456',
-          confirmPassword:'123456',
-          email:'aa@qq.com'
+          username:'',
+          password:'',
+          confirmPassword:'',
+          email:''
         },
         rules: {
           username: [{ required: true,trigger:'blur',validator: validateUsername }],
@@ -95,7 +95,7 @@
         pwdType:'password',
         confirmPwdType:'password'
       }
-      
+
     },
     methods: {
       //切换密码显示的图标
@@ -117,12 +117,10 @@
         this.$refs.registerForm.validate((valid) => {
           if (valid) {
              this.$store.dispatch("Register",this.registerForm).then(()=>{
-               debugger
                this.$router.push({path:'/login'});
             }).catch(()=>{
-                debugger
                 console.log("error");
-            }) 
+            })
           } else {
             console.log('error submit!!');
             return false;
@@ -219,6 +217,6 @@
           }
       }
     }
-    
-    
+
+
 </style>

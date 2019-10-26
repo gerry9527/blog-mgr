@@ -25,7 +25,6 @@ export function register(username, password,confirmPassword,email) {
 }
 
 export function getInfo(token) {
-    debugger
     return request({
         url: '/users/info',
         method: 'get',
