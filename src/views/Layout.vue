@@ -102,7 +102,7 @@ export default {
       background: #f4f5f6;
     }
     .router-container{
-      height: calc(100% - 90px);
+      height: calc(100% - 96px);
       padding: 20px;
     }
   }

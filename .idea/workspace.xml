@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97cfb931-641f-41d7-876b-83986ca79b94" name="Default" comment="去除debugger,增加normalize.css,去除reset.css">
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Layout.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Layout.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +97,7 @@
       <workItem from="1554642188990" duration="205000" />
       <workItem from="1555134578389" duration="595000" />
       <workItem from="1572067123582" duration="3441000" />
-      <workItem from="1572076754253" duration="16095000" />
+      <workItem from="1572076754253" duration="16533000" />
     </task>
     <servers />
   </component>
