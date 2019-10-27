@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
@@ -12,8 +12,8 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    if (store.getters.token) {
-        config.headers.Authorization = `${getToken()}`;
+    if (store.state.user.token) {
+        config.headers.Authorization = store.state.user.token;
     }
     return config
 }, error => {

@@ -9,7 +9,7 @@
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人中心</el-dropdown-item>
           <el-dropdown-item>设置</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item @click.native="loginOut">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-header>
@@ -62,6 +62,9 @@ export default {
   methods: {
     handleBreadcrumbClick (index) {
       if (index === 0) this.$router.back()
+    },
+    loginOut () {
+      this.$router.push({path: '/login'})
     }
   }
 };
