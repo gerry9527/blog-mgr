@@ -15,3 +15,19 @@ export function query (params) {
     params
   })
 }
+
+export function update (params) {
+  return request({
+    url: '/category/update',
+    method: 'post',
+    params
+  })
+}
+
+export function remove (params) {
+  return request({
+    url: '/category/delete',
+    method: 'post',
+    params
+  })
+}

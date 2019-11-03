@@ -45,8 +45,9 @@
                 </el-table-column>
                 <el-table-column label="操作" width="180px" align="center">
                     <template slot-scope="scope">
-                        <el-button type="warning" plain size="mini">禁用</el-button>
-                        <el-button type="danger" plain size="mini">删除</el-button>
+                        <el-button type="warning" plain size="mini" v-if="scope.row.status==1" @click="handleFobide(scope.row, 0)">禁用</el-button>
+                        <el-button type="success" plain size="mini" v-if="scope.row.status==0" @click="handleFobide(scope.row, 1)">启用</el-button>
+                        <el-button type="danger" plain size="mini" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -84,7 +85,7 @@
 </template>
 
 <script>
-    import { save, query } from '../../../api/category'
+    import { save, query, update, remove } from '../../../api/category'
     import moment from 'moment'
     export default {
       name: 'categoryManage',
@@ -147,6 +148,29 @@
         },
         add () { // 新建类别
           this.dialogFormVisible = true
+        },
+        async handleFobide (row, status) { // 禁用/启用
+            let bean = {}
+            Object.assign(bean, row)
+            bean.status = status
+            let result = await update(bean)
+            if (result) {
+                this.$message.success(result.msg)
+                this.query()
+            }
+        },
+        handleDelete (row) { // 移除当前记录
+            this.$confirm(`确定要删除【${row.name}】`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                let result = await remove({id: row.id})
+                if (result) {
+                    this.$message.success(result.msg)
+                    this.query()
+                }
+            })
         },
         async handleSubmit () {
             let result = await save(this.categoryParams)
