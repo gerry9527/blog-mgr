@@ -2,8 +2,8 @@
     <section class="common-module">
         <div class="search-form">
             <el-form v-model="searchParams" :inline="true" size="small">
-                <el-form-item label="类别名称" prop="categoryName">
-                    <el-input v-model="searchParams.categoryName" placeholder="请输入类别名称" maxlength="20"></el-input>
+                <el-form-item label="类别名称" prop="name">
+                    <el-input v-model="searchParams.name" placeholder="请输入类别名称" maxlength="20"></el-input>
                 </el-form-item>
                 <el-form-item label="状态" prop="status">
                     <el-select v-model="searchParams.status">
@@ -26,14 +26,24 @@
                     v-loading="loading"
                     stripe
             >
+                <el-table-column label="序号" align="center" width="80px">
+                    <template slot-scope='{ row, column, $index }'>
+                        <div>{{ $index + 1 }}</div>
+                    </template>
+                </el-table-column>
                 <el-table-column label="类别名称" prop="name" align="center"></el-table-column>
                 <el-table-column label="描述信息" prop="description" align="center"></el-table-column>
-                <el-table-column label="创建时间" prop="createTime" align="center">
+                <el-table-column label="创建时间" width="150px" prop="createTime" align="center">
                     <template slot-scope='{row}'>
                         <span>{{row.createTime | dateFormat('YYYY-MM-DD hh:mm:ss')}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center">
+                <el-table-column label='状态' width="80px" align="center">
+                    <template slot-scope='{ row }'>
+                        <div>{{ row.status | formatStatus }}</div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="180px" align="center">
                     <template slot-scope="scope">
                         <el-button type="warning" plain size="mini">禁用</el-button>
                         <el-button type="danger" plain size="mini">删除</el-button>
@@ -110,6 +120,9 @@
       filters: {
           dateFormat (value, format) {
               return moment(new Date(value)).format(format)
+          },
+          formatStatus (value) {
+              return value === 1 ? '启用' : '禁用'
           }
       },
       methods: {
@@ -117,16 +130,11 @@
             let bean = {}
             this.loading = true
             Object.assign(bean, this.searchParams, this.pagination)
-            let result = await query(bean).catch(err => {
-                this.loading = false
-                this.$message.error('查询失败')
-            })
+            let result = await query(bean)
             this.loading = false
             if (result && result.content) {
                 this.tableData = result.content.rows
                 this.pagination.total = result.content.total
-            } else {
-                this.$message.error('查询失败')
             }
         },
         handleSizeChange (pageSize) {
