@@ -10,10 +10,12 @@ import './icons'; // icon
 import store from './store';
 import axios from 'axios';
 import '@/permission' // permission control
+import moment from 'moment'
 
 Vue.config.productionTip = false;
 Vue.use(Elemnet);
 Vue.prototype.$axios = axios;
+Vue.prototype.$moment = moment
 
 new Vue({
   el:'#app',

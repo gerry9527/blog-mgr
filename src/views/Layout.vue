@@ -64,6 +64,7 @@ export default {
       if (index === 0) this.$router.back()
     },
     loginOut () {
+      debugger
       this.$router.push({path: '/login'})
     }
   }

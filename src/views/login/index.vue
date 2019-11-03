@@ -70,8 +70,11 @@
           if (valid) {
             login(this.loginForm).then(res => {
               if (res.code === 0){
+                debugger
                 this.$store.commit('SET_TOKEN', res.content.token);
-                this.$router.push({ path: "/home" });
+                this.$nextTick(() => {
+                  this.$router.push({ path: "/home" });
+                })
               } else {
                 this.$message.warning(res.msg)
               }

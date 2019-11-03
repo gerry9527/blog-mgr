@@ -9,7 +9,7 @@ router.beforeEach((to, from, next) => {
     // token存在store中即可
     if (store.state.user.token) {
         if (to.path === '/login') {
-            next({ path: '/' })
+            next()
             NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
         } else {
             // 设置面包屑文本信息

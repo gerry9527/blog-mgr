@@ -14,20 +14,25 @@
                 </el-form-item>
             </el-form>
             <div class="btn-group">
-                <el-button size="small" plain>查询</el-button>
+                <el-button size="small" plain @click="query">查询</el-button>
                 <el-button type="primary" size="small" @click="add">新建</el-button>
             </div>
         </div>
         <div class="content">
             <el-table border
                     :data="tableData"
-                    size="small"
-                    :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+                    size="mini"
                     height="calc(100% - 50px)"
+                    v-loading="loading"
+                    stripe
             >
-                <el-table-column label="类别名称" prop="categoryName" align="center"></el-table-column>
+                <el-table-column label="类别名称" prop="name" align="center"></el-table-column>
                 <el-table-column label="描述信息" prop="description" align="center"></el-table-column>
-                <el-table-column label="创建时间" prop="createTime" align="center"></el-table-column>
+                <el-table-column label="创建时间" prop="createTime" align="center">
+                    <template slot-scope='{row}'>
+                        <span>{{row.createTime | dateFormat('YYYY-MM-DD hh:mm:ss')}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" align="center">
                     <template slot-scope="scope">
                         <el-button type="warning" plain size="mini">禁用</el-button>
@@ -38,7 +43,7 @@
             <el-pagination class="pull-right" style="margin-top: 10px;"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page="pagination.page"
+                    :current-page="pagination.currentPage"
                     :page-sizes="[10, 20, 50, 100]"
                     :page-size="pagination.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
@@ -69,18 +74,20 @@
 </template>
 
 <script>
-    import { save } from '../../../api/category'
+    import { save, query } from '../../../api/category'
+    import moment from 'moment'
     export default {
       name: 'categoryManage',
       data () {
         return {
-          searchParams: {
-            categoryName: '',
+           searchParams: {
+            name: '',
             status: ''
           },
+          loading: false,
           tableData: [],
           pagination: {
-            page: 1,
+            currentPage: 1,
             pageSize: 10,
             total: 0
           },
@@ -97,18 +104,51 @@
           }
         }
       },
+      created() {
+          this.query()
+      },
+      filters: {
+          dateFormat (value, format) {
+              return moment(new Date(value)).format(format)
+          }
+      },
       methods: {
-        handleSizeChange () {
-
+        async query () {
+            let bean = {}
+            this.loading = true
+            Object.assign(bean, this.searchParams, this.pagination)
+            let result = await query(bean).catch(err => {
+                this.loading = false
+                this.$message.error('查询失败')
+            })
+            this.loading = false
+            if (result && result.content) {
+                this.tableData = result.content.rows
+                this.pagination.total = result.content.total
+            } else {
+                this.$message.error('查询失败')
+            }
         },
-        handleCurrentChange () {
-
+        handleSizeChange (pageSize) {
+            this.pagination.pageSize = pageSize
+            this.query()
+        },
+        handleCurrentChange (page) {
+            this.pagination.currentPage = page
+            this.query()
         },
         add () { // 新建类别
           this.dialogFormVisible = true
         },
         async handleSubmit () {
             let result = await save(this.categoryParams)
+            if (result && result.code === 0) {
+                this.$message.success(result.msg)
+                this.query()
+            } else {
+                this.$message.error(res.msg)
+            }
+            this.dialogFormVisible = false
         }
       }
     }
